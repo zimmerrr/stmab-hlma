@@ -58,7 +58,9 @@ export default defineConfig((/* ctx */) => {
 
       // publicPath: '/',
       // analyze: true,
-      // env: {},
+      env: {
+        API_HOST: 'https://g188k323-3000.asse.devtunnels.ms',
+      },
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
@@ -99,7 +101,12 @@ export default defineConfig((/* ctx */) => {
       // directives: [],
 
       // Quasar plugins
-      plugins: [],
+      plugins: [
+        'Notify',
+        'LocalStorage',
+        'Loading',
+        'Dialog',
+      ],
     },
 
     // animations: 'all', // --- includes all animations

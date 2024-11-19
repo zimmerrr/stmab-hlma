@@ -11,6 +11,9 @@ importers:
       '@quasar/extras':
         specifier: ^1.16.4
         version: 1.16.13
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       quasar:
         specifier: ^2.16.0
         version: 2.17.4
