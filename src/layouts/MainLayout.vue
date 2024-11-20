@@ -41,6 +41,7 @@ import NAVIGATION from 'src/components/navigation'
 import { ref, watch } from 'vue'
 import { LocalStorage } from 'quasar'
 import { useRouter, useRoute } from 'vue-router'
+import { useConfig } from 'src/components/backend/config'
 
 defineOptions({
   name: 'MainLayout',
@@ -50,7 +51,8 @@ const router = useRouter()
 const route = useRoute()
 const userRole = ref(LocalStorage.getItem('USER_ROLE') || '')
 
-console.log(process.env)
+console.log('Environment Variables:', useConfig())
+
 </script>
 
 <style lang="sass">
