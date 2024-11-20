@@ -143,14 +143,10 @@ const COLUMNS: {
 ]
 
 const router = useRouter()
-const menuToggle = ref(false)
+const menuToggle = ref(true)
 const loading = ref(false)
 const users = ref<User[]>([])
 
-// const usersByRole = computed(() => {
-//   const result = bookingResult.value
-//   return result?.bookings?.nodes || []
-// })
 const activeMenu = ref({
   label: 'Students',
   key: 'student',
