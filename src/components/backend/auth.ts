@@ -36,7 +36,7 @@ export function useLogin() {
       const data = await response.json()
       token.value = data.token as any
       if (token.value) {
-        await viewUser(token.value)
+        await viewUser()
       }
     } catch (error) {
       console.error('Error occurred:', error)

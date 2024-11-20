@@ -1,116 +1,249 @@
 <template>
-  <q-page class="flex flex-center">
-    <q-form
-      class="bg-transparent"
-      style="width: 400px; max-width: 90vw"
-      @submit.prevent="onSubmit"
-    >
-      <div class="text-center q q-mb-md">
-        <q-img
-          src="~assets/logo.png"
-          no-spinner
-          class="logo"
+  <q-page class="flex flex-center bg-primary">
+    <q-header>
+      <q-toolbar>
+        <q-btn
+          flat
+          round
+          dense
+          icon="menu"
+          class="q-mr-sm"
+          @click="menuToggle = !menuToggle"
         />
-      </div>
-      <div class="column q-col-gutter-md q-pa-sm">
-        <div class="text-center text-white login-text">
-          Inventory Management
-          <span class="text-primary">
-            System
-          </span>
-        </div>
-        <div>
-          <q-input
-            v-model="form.username"
-            label="Username"
-            color="accent"
-            bg-color="white"
-            filled
-            class="text-primary generic-input"
-          />
-        </div>
-        <div>
-          <q-input
-            v-model="form.password"
-            label="Password"
-            bg-color="white"
-            color="accent"
-            filled
-            class="generic-input"
-            :class="{'password-toggle': passwordToggle}"
 
-            :type="passwordToggle ? 'password' : 'text'"
-          >
-            <template #append>
-              <q-icon
-                :name="passwordToggle ? 'visibility_off' : 'visibility'"
-                class="cursor-pointer"
-                @click="passwordToggle = !passwordToggle"
-              />
+        <q-toolbar-title class="non-selectable">
+          HLMA: Hybrid Learning Management Application
+        </q-toolbar-title>
+      </q-toolbar>
+
+      <q-drawer
+        v-model="menuToggle"
+        elevated
+        class="bg-accent"
+      >
+        <q-scroll-area class="fit non-selectable">
+          <q-list class="q-mt-md">
+            <template
+              v-for="(item, idx) in MENU"
+              :key="idx"
+            >
+              <q-item
+                v-ripple
+                clickable
+                class="text-primary"
+                :class="item.key === activeMenu.key? 'bg-primary text-white' : ''"
+                @click="changeActiveMenu(item.label, item.key)"
+              >
+                <q-item-section avatar>
+                  <q-icon :name="item.icon" />
+                </q-item-section>
+                <q-item-section>
+                  {{ item.label }}
+                </q-item-section>
+              </q-item>
             </template>
-          </q-input>
+          </q-list>
+        </q-scroll-area>
+      </q-drawer>
+    </q-header>
+    <div class="container">
+      <div class="row text-center fit q-gutter-lg q-mx-auto">
+        <div class="col-12 col-md-5 q-pa-md bg-secondary">
+          <div class="bg-white card full-height q-pt-xs q-pb-md">
+            <div class="login text-h6 text-primary text-uppercase">
+              <div class="q-my-md">
+                {{ activeMenu.label }}
+              </div>
+            </div>
+
+            <template v-if="activeMenu.key === 'login' || activeMenu.key ==='register'">
+              <q-form
+                ref="loginFormRef"
+                class="text-center q-mx-auto"
+                @submit.prevent="onSubmit"
+              >
+                <div class="column q-col-gutter-md q-pa-sm">
+                  <div class="q-mt-xl">
+                    <q-input
+                      v-model="loginForm.username"
+                      label="Username"
+                      color="accent"
+                      bg-color="white"
+                      borderless
+                      class="text-primary generic-input q-px-md"
+                    />
+                  </div>
+                  <div>
+                    <q-input
+                      v-model="loginForm.password"
+                      label="Password"
+                      bg-color="white"
+                      color="accent"
+                      borderless
+                      class="generic-input q-px-md"
+                      :class="{'password-toggle': passwordToggle}"
+
+                      :type="passwordToggle ? 'password' : 'text'"
+                    >
+                      <template #append>
+                        <q-icon
+                          :name="passwordToggle ? 'visibility_off' : 'visibility'"
+                          class="cursor-pointer"
+                          @click="passwordToggle = !passwordToggle"
+                        />
+                      </template>
+                    </q-input>
+                  </div>
+                  <div>
+                    <q-btn
+                      :loading="loading"
+                      :label="activeMenu.key === 'login' ? 'Login' : 'Register'"
+                      type="submit"
+                      color="white"
+                      flat
+                      class="generic-button bg-primary full-width"
+                      dense
+                      no-caps
+                    />
+                  </div>
+                </div>
+              </q-form>
+            </template>
+
+            <template v-if="activeMenu.key === 'forgotPassword'">
+              <q-form
+                ref="forgotPasswordRef"
+                class="text-center q-mx-auto"
+                @submit.prevent="onSubmit"
+              >
+                <div class="column q-col-gutter-md q-pa-sm">
+                  <div class="q-mt-xl">
+                    <q-input
+                      v-model="loginForm.username"
+                      label="Student Address"
+                      color="accent"
+                      bg-color="white"
+                      borderless
+                      class="text-primary generic-input q-px-md"
+                    />
+                  </div>
+                  <div>
+                    <q-btn
+                      :loading="loading"
+                      label="Submit"
+                      type="submit"
+                      color="white"
+                      flat
+                      class="generic-button bg-primary full-width"
+                      dense
+                      no-caps
+                    />
+                  </div>
+                </div>
+              </q-form>
+            </template>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 q-pa-md bg-secondary">
+          <div class="bg-white card full-height">
+            <div class="login text-h6 text-primary text-uppercase">
+              <div class="q-my-md">
+                GUIDE
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <q-card-actions align="right">
-        <div class="generic-button bg-secondary fit">
-          <q-btn
-            :loading="loading"
-            label="Login"
-            type="submit"
-            class="full-width"
-            size="lg"
-            flat
-            dense
-            no-caps
-          />
-        </div>
-      </q-card-actions>
-    </q-form>
+    </div>
   </q-page>
 </template>
 <script setup lang="ts">
 import { reactive, ref, onMounted } from 'vue'
 import { useLogin, useAuth } from 'src/components/backend/auth'
 import { useRouter } from 'vue-router'
-import { LocalStorage, Notify } from 'quasar'
+import { LocalStorage, Notify, QForm } from 'quasar'
+
+const MENU = [
+  {
+    label: 'Login',
+    key: 'login',
+    icon: 'login',
+  },
+  {
+    label: 'Register',
+    key: 'register',
+    icon: 'person_add',
+  },
+  {
+    label: 'Forgot Password',
+    key: 'forgotPassword',
+    icon: 'lock_open',
+  },
+]
 
 const router = useRouter()
-const form = reactive({
+const menuToggle = ref(false)
+const passwordToggle = ref(true)
+const loading = ref(false)
+const activeMenu = ref({
+  label: 'Login',
+  key: 'login',
+})
+
+const loginForm = reactive({
   username: '',
   password: '',
 })
 
-const loading = ref(false)
-const passwordToggle = ref(true)
+const loginFormRef = ref<QForm>(null as any)
+const registrationFormRef = ref<QForm>(null as any)
+const forgotPasswordRef = ref<QForm>(null as any)
+
 const { login } = useLogin()
 async function onSubmit() {
   try {
-    if (form.username.trim() === '' || form.password.trim() === '') {
-      return Notify.create({
-        message: 'Please enter username and password',
-        color: 'negative',
-        textColor: 'white',
-      })
-    }
-
     loading.value = true
-    // login
 
-    await login(form)
-    // check user role
+    if (activeMenu.value.key === 'login' || activeMenu.value.key === 'register') {
+      if (loginForm.username.trim() === '' || loginForm.password.trim() === '') {
+        return Notify.create({
+          message: 'Please enter your student ID and password',
+          color: 'negative',
+          textColor: 'white',
+        })
+      }
 
-    if (isLoggedIn()) {
-      router.replace('/')
-    } else {
-      Notify.create({
-        message: 'Invalid username or password',
-        color: 'negative',
-        textColor: 'white',
-      })
+      await login(loginForm)
+
+      if (activeMenu.value.key === 'register') {
+        // update user
+      }
+
+      if (isLoggedIn()) {
+        router.replace('/')
+      } else {
+        Notify.create({
+          message: 'Invalid username or password',
+          color: 'negative',
+          textColor: 'white',
+        })
+      }
+    } else if (activeMenu.value.key === 'forgotPassword') {
+      // send password reset email
     }
   } finally {
     loading.value = false
   }
+}
+
+function changeActiveMenu(label: string, key: string) {
+  activeMenu.value = { label, key }
+  clearForms()
+}
+
+function clearForms() {
+  loginForm.username = ''
+  loginForm.password = ''
 }
 
 const { validateToken } = useAuth()
@@ -131,17 +264,17 @@ onMounted(() => {
 </script>
 
 <style lang="sass" scoped>
-.logo
-  width: 300px
-  max-width: 40vw
+.container
+  width: 1500px
+  max-width: 96vw
+  height: 86dvh
 
+.login
+  border-bottom: 2px solid rgba($primary, 0.2)
+
+.card
+  border-radius: 18px
 .q-form
   max-width: 30vw
-.login-text
-  font-size: 3rem
 
-.password-toggle
-  :deep(.q-field__native)
-    font-family: Serif !important
-    font-size: 2rem !important
 </style>

@@ -8,7 +8,6 @@ const routes: RouteRecordRaw[] = [
       {
         path: '',
         component: () => import('pages/index.vue'),
-        meta: { showHeader: true },
       },
       {
         path: 'login',
