@@ -19,6 +19,7 @@ defineOptions({
 const router = useRouter()
 const { validateToken } = useAuth()
 
+const role = LocalStorage.getItem('USER_ROLE')
 function isLoggedIn() {
   const token = LocalStorage.getItem('AUTH_TOKEN')
   if (!token) return
@@ -29,7 +30,11 @@ function isLoggedIn() {
 
 onMounted(async () => {
   if (await isLoggedIn()) {
-    router.replace('/')
+    if (role === 'admin') {
+      router.replace('/admin')
+    } else {
+      router.replace('/')
+    }
   } else {
     router.replace('/login')
   }

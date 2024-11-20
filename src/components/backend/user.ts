@@ -15,14 +15,40 @@ export interface User {
   role?: string
 }
 
-export const userRole = ref<string | null>(LocalStorage.getItem('USER_ROLE') || '')
-watch(userRole, (val) => { LocalStorage.set('USER_ROLE', val || '') })
-
 export function useViewerUser() {
-  async function viewUser() {
+  async function viewUser(token?: string) {
+    try {
+      const _token = LocalStorage.getItem('AUTH_TOKEN')
+      const response = await fetch(`${config.API_HOST}/users/myProfile`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          token: token || _token,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
+
+      const data = await response.json()
+
+      return data as User
+    } catch (error) {
+      console.error('Error occurred:', error)
+    }
+  }
+
+  return { viewUser }
+}
+
+export function viewUsers() {
+  async function viewUsersByRole(role: string) {
     try {
       const token = LocalStorage.getItem('AUTH_TOKEN')
-      const response = await fetch(`${config.API_HOST}/users/myProfile`, {
+      const response = await fetch(`${config.API_HOST}/users/role/${role}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -37,13 +63,12 @@ export function useViewerUser() {
       }
 
       const data = await response.json()
-      userRole.value = data.role as any
 
-      return data as User
+      return data
     } catch (error) {
       console.error('Error occurred:', error)
     }
   }
 
-  return { viewUser }
+  return { viewUsersByRole }
 }

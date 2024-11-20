@@ -162,6 +162,7 @@ import { reactive, ref, onMounted } from 'vue'
 import { useLogin, useAuth } from 'src/components/backend/auth'
 import { useRouter } from 'vue-router'
 import { LocalStorage, Notify, QForm } from 'quasar'
+import { useViewerUser } from 'src/components/backend/user'
 
 const MENU = [
   {
@@ -218,9 +219,16 @@ async function onSubmit() {
       if (activeMenu.value.key === 'register') {
         // update user
       }
+      const { viewUser } = useViewerUser()
 
       if (isLoggedIn()) {
-        router.replace('/')
+        const user = await viewUser()
+
+        if (user?.role === 'admin') {
+          router.replace('/admin')
+        } else {
+          router.replace('/')
+        }
       } else {
         Notify.create({
           message: 'Invalid username or password',
