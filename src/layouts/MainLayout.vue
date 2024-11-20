@@ -50,6 +50,7 @@ const router = useRouter()
 const route = useRoute()
 const userRole = ref(LocalStorage.getItem('USER_ROLE') || '')
 
+console.log(process.env)
 </script>
 
 <style lang="sass">

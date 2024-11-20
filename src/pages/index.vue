@@ -45,7 +45,6 @@ onMounted(async () => {
   }
   try {
     loading.value = true
-    console.log(process.env)
     const response = await fetch(`${config.API_HOST}/items`)
     if (!response.ok) {
       throw new Error('Failed to fetch items')
