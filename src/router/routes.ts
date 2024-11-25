@@ -21,12 +21,20 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/admin',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('layouts/AdminLayout.vue'),
     children: [
       {
-        path: '',
-        component: () => import('pages/admin/index.vue'),
+        path: 'users',
+        component: () => import('pages/admin/users.vue'),
       },
+      {
+        path: 'course',
+        component: () => import('pages/admin/course.vue'),
+      },
+      // {
+      //   path: 'logs',
+      //   component: () => import('pages/admin/logs.vue'),
+      // },
     ],
   },
 

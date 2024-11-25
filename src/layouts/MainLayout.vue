@@ -9,6 +9,8 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useAuth } from 'src/components/backend/auth'
+import { useConfig } from 'src/components/backend/config'
+
 import { LocalStorage } from 'quasar'
 import { useRouter } from 'vue-router'
 
@@ -16,6 +18,8 @@ defineOptions({
   name: 'MainLayout',
 })
 
+const config = useConfig()
+console.log(config)
 const router = useRouter()
 const { validateToken } = useAuth()
 
@@ -29,9 +33,9 @@ function isLoggedIn() {
 }
 
 onMounted(async () => {
-  if (await isLoggedIn()) {
+  if (await !isLoggedIn()) {
     if (role === 'admin') {
-      router.replace('/admin')
+      router.replace('/admin/users')
     } else {
       router.replace('/')
     }

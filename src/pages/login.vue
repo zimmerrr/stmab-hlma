@@ -203,42 +203,31 @@ const forgotPasswordRef = ref<QForm>(null as any)
 const { login } = useLogin()
 async function onSubmit() {
   try {
-    loading.value = true
-
-    if (activeMenu.value.key === 'login' || activeMenu.value.key === 'register') {
-      if (loginForm.username.trim() === '' || loginForm.password.trim() === '') {
-        return Notify.create({
-          message: 'Please enter your student ID and password',
-          color: 'negative',
-          textColor: 'white',
-        })
-      }
-
-      await login(loginForm)
-
-      if (activeMenu.value.key === 'register') {
-        // update user
-      }
-      const { viewUser } = useViewerUser()
-
-      if (isLoggedIn()) {
-        const user = await viewUser()
-
-        if (user?.role === 'admin') {
-          router.replace('/admin')
-        } else {
-          router.replace('/')
-        }
-      } else {
-        Notify.create({
-          message: 'Invalid username or password',
-          color: 'negative',
-          textColor: 'white',
-        })
-      }
-    } else if (activeMenu.value.key === 'forgotPassword') {
-      // send password reset email
+    if (loginForm.username.trim() === '' || loginForm.password.trim() === '') {
+      return Notify.create({
+        message: 'Please enter username and password',
+        color: 'negative',
+        textColor: 'white',
+      })
     }
+
+    loading.value = true
+    // login
+
+    await login(loginForm)
+    // check user role
+
+    if (isLoggedIn()) {
+      router.replace('/')
+    } else {
+      Notify.create({
+        message: 'Invalid username or password',
+        color: 'negative',
+        textColor: 'white',
+      })
+    }
+  } catch (error) {
+    throw new Error('Something went wrong')
   } finally {
     loading.value = false
   }
