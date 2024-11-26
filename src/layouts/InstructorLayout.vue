@@ -32,7 +32,6 @@
                   v-ripple
                   clickable
                   class="text-primary"
-                  :class="item.key === activeMenu.key? 'bg-primary text-white' : ''"
                   @click="router.replace(item.to)"
                 >
                   <q-item-section avatar>
@@ -61,22 +60,10 @@ import { LocalStorage } from 'quasar'
 import { useRouter } from 'vue-router'
 const MENU = [
   {
-    label: 'Users',
-    key: 'users',
-    icon: 'person',
-    to: '/admin/users',
-  },
-  {
     label: 'Course',
     key: 'course',
     icon: 'menu_book',
     to: '/admin/course',
-  },
-  {
-    label: 'Logs',
-    key: 'log',
-    icon: 'sticky_note_2',
-    to: '/admin/logs',
   },
   {
     label: 'Logout',
@@ -92,10 +79,6 @@ defineOptions({
 
 const config = useConfig()
 const menuToggle = ref(false)
-const activeMenu = ref({
-  label: 'Users',
-  key: 'users',
-})
 console.log(config)
 const router = useRouter()
 const { validateToken } = useAuth()

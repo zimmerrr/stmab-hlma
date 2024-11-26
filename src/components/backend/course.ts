@@ -5,6 +5,12 @@ import { useViewerUser } from 'src/components/backend/user'
 
 const config = useConfig()
 
+export interface Activity {
+  _id?: string,
+  name?: string
+  description?: string
+  active?: boolean
+}
 export interface Member {
   _id?: string,
   active?: boolean
@@ -86,6 +92,99 @@ export async function updateCourse(course: Course) {
       },
       body: JSON.stringify({
         ...course,
+      }),
+    })
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+  } catch (error) {
+    console.error('Error occurred:', error)
+  }
+}
+
+export async function viewerCourses() {
+  try {
+    const token = LocalStorage.getItem('AUTH_TOKEN')
+
+    const response = await fetch(`${config.API_HOST}/courses/viewer`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`,
+      },
+    })
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+
+    const data = await response.json()
+
+    return data
+  } catch (error) {
+
+  }
+}
+
+export async function viewActivities(courseId: string) {
+  try {
+    const token = LocalStorage.getItem('AUTH_TOKEN')
+
+    const response = await fetch(`${config.API_HOST}/courses/activities`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        courseId,
+      }),
+    })
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+
+    const data = await response.json()
+
+    return data
+  } catch (error) {
+
+  }
+}
+
+export async function addActivity(courseId: string, activity: Activity) {
+  try {
+    const token = LocalStorage.getItem('AUTH_TOKEN')
+    const response = await fetch(`${config.API_HOST}/courses/activity`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        courseId,
+        ...activity,
+      }),
+
+    })
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+  } catch (error) {
+    console.error('Error occurred:', error)
+  }
+}
+
+export async function updateActivity(courseId: string, activityId: string, activity: Activity) {
+  try {
+    const token = LocalStorage.getItem('AUTH_TOKEN')
+    const response = await fetch(`${config.API_HOST}/courses/activity/${courseId}/${activityId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        ...activity,
       }),
     })
     if (!response.ok) {

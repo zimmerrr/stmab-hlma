@@ -114,10 +114,10 @@
                         form.description = props.row.description"
                     />
                     <q-btn
-                      :disable="deleteItemLoading"
+                      :disable="deleteCourseLoading"
                       :label="active ? 'DELETE' : 'RESTORE'"
                       :color="active ? 'red' : 'green'"
-                      @click="deleteItem(props.row._id, props.row.controlNumber)"
+                      @click="deleteCourse(props.row._id, props.row.controlNumber)"
                     />
                   </div>
                 </q-td>
@@ -223,7 +223,7 @@
       >
         <div class="column q-gutter-md q-pa-sm">
           <div class="text-h4">
-            Update Item
+            Update Course
           </div>
           <q-input
             v-model="form.username"
@@ -239,7 +239,7 @@
           />
           <q-input
             v-model="form.name"
-            label="Item Name"
+            label="Name"
             color="accent"
             bg-color="white"
             borderless
@@ -346,7 +346,7 @@ const showUpdateDialog = ref(false)
 const showMembersDialog = ref(false)
 const showScanner = ref(false)
 const loading = ref(false)
-const deleteItemLoading = ref(false)
+const deleteCourseLoading = ref(false)
 const formRef = ref<QForm>(null as any)
 
 const course = ref<Course[]>([])
@@ -375,14 +375,17 @@ async function onSubmit() {
     loading.value = true
     if (showDialog.value) {
       await addCourse({
+        username: form.username,
         name: form.name,
         description: form.description,
       })
     } else if (showUpdateDialog.value) {
       await updateCourse({
+        username: form.username,
         _id: form._id,
         name: form.name,
         description: form.description,
+        active: true,
       })
       showUpdateDialog.value = false
     } else if (showScanner.value) {
@@ -392,7 +395,7 @@ async function onSubmit() {
         description: form.description,
       })
       Notify.create({
-        message: 'Item updated successfully',
+        message: 'Course updated successfully',
         color: 'green',
       })
 
@@ -411,26 +414,26 @@ async function onSubmit() {
 async function fetchCourses() {
   try {
     loading.value = true
-    const _items = await viewCourses(active.value, searchQuery.value.trim())
-    course.value = _items
+    const _course = await viewCourses(active.value, searchQuery.value.trim())
+    course.value = _course
     console.log(course.value)
   } catch (error) {
-    console.error('Error fetching items:', error)
+    console.error('Error fetching course:', error)
   } finally {
     loading.value = false
   }
 }
 
-async function deleteItem(id: string, controlNumber: string) {
+async function deleteCourse(id: string, controlNumber: string) {
   try {
-    deleteItemLoading.value = true
+    deleteCourseLoading.value = true
     if (active.value) {
       Dialog.create({
         title: 'Confirm Action',
         message: `Are you sure you want to delete <b>${controlNumber}</b>?`,
         html: true,
         color: 'black',
-        ok: { label: 'Delete Item', color: 'negative' },
+        ok: { label: 'Delete Course', color: 'negative' },
         cancel: true,
       }).onOk(async () => {
         await updateCourse({
@@ -445,7 +448,7 @@ async function deleteItem(id: string, controlNumber: string) {
         message: `Are you sure you want to restore <b>${controlNumber}</b>?.`,
         html: true,
         color: 'black',
-        ok: { label: 'Restore Item', color: 'positive' },
+        ok: { label: 'Restore Course', color: 'positive' },
         cancel: true,
       }).onOk(async () => {
         await updateCourse({
@@ -456,9 +459,9 @@ async function deleteItem(id: string, controlNumber: string) {
       })
     }
   } catch (error) {
-    console.error('Error deleting item:', error)
+    console.error('Error deleting course:', error)
   } finally {
-    deleteItemLoading.value = false
+    deleteCourseLoading.value = false
   }
 }
 

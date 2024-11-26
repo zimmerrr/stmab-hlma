@@ -504,6 +504,7 @@ function clearPassword() {
 
 async function updatePassword() {
   try {
+    console.log('test')
     loading.value = true
     if (password.password1 !== password.password2) {
       return Notify.create({

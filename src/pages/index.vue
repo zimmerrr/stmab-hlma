@@ -28,13 +28,11 @@ onMounted(async () => {
     const user = await viewUser()
     if (user?.role === 'admin') {
       router.replace('/admin/users')
-    } else if (user?.role === 'employee') {
+    } else if (user?.role === 'instructor' || user?.role === 'student') {
       router.replace('/courses')
-    } else if (user?.role === 'student') {
-      router.replace('/student/dashboard')
+    } else {
+      router.replace('/login')
     }
-  } else {
-    router.replace('/login')
   }
 })
 

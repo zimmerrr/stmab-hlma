@@ -2,6 +2,24 @@
   <q-layout view="lHh Lpr lFf">
     <q-page-container>
       <router-view />
+      <q-header>
+        <q-toolbar>
+          <q-toolbar-title class="non-selectable">
+            HLMA: Hybrid Learning Management Application
+          </q-toolbar-title>
+
+          <q-btn
+            flat
+            round
+            dense
+            label="logout"
+            icon="logout"
+            class="q-mr-sm"
+            right-icon
+            @click="router.replace('/logout')"
+          />
+        </q-toolbar>
+      </q-header>
     </q-page-container>
   </q-layout>
 </template>
