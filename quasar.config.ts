@@ -59,10 +59,10 @@ export default defineConfig((/* ctx */) => {
       // publicPath: '/',
       // analyze: true,
       env: {
-        API_HOST: 'https://g188k323-3000.asse.devtunnels.ms',
-        // API_HOST: process.env.API_HOST || 'https://lms-ajp.vercel.app',
-        FRONTEND: process.env.FRONTTEND || 'http://localhost:9000/#',
-        // FRONTEND: process.env.FRONTTEND || 'https://stmab-hlma.vercel.app',
+        // API_HOST: 'https://g188k323-3000.asse.devtunnels.ms',
+        // FRONTEND: process.env.FRONTTEND || 'http://localhost:9000/#',
+        API_HOST: process.env.API_HOST || 'https://lms-ajp.vercel.app',
+        FRONTEND: process.env.FRONTTEND || 'https://stmab-hlma.vercel.app',
       },
       // rawDefine: {}
       // ignorePublicFolder: true,
