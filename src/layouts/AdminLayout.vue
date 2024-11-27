@@ -33,7 +33,7 @@
                   clickable
                   class="text-primary"
                   :class="item.key === activeMenu.key? 'bg-primary text-white' : ''"
-                  @click="router.replace(item.to)"
+                  @click="activeMenu.key = item.key; activeMenu.label = item.label; router.replace(item.to);"
                 >
                   <q-item-section avatar>
                     <q-icon :name="item.icon" />

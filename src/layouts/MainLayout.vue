@@ -5,10 +5,16 @@
       <q-header>
         <q-toolbar>
           <q-toolbar-title class="non-selectable">
-            HLMA: Hybrid Learning Management Application
+            <span>
+              HLMA
+            </span>
+            <span v-if="!$q.screen.xs">
+              : Hybrid Learning Management Application
+            </span>
           </q-toolbar-title>
 
           <q-btn
+            v-if="!route.meta.login"
             flat
             round
             dense
@@ -27,38 +33,34 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useAuth } from 'src/components/backend/auth'
-import { useConfig } from 'src/components/backend/config'
 
 import { LocalStorage } from 'quasar'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 defineOptions({
   name: 'MainLayout',
 })
 
-const config = useConfig()
-console.log(config)
+const route = useRoute()
 const router = useRouter()
 const { validateToken } = useAuth()
 
 const role = LocalStorage.getItem('USER_ROLE')
 function isLoggedIn() {
   const token = LocalStorage.getItem('AUTH_TOKEN')
-  if (!token) return
+  if (!token) return false
   const isValid = validateToken(token as string)
-
   return isValid
 }
 
 onMounted(async () => {
-  if (await !isLoggedIn()) {
+  if (role !== '' || await isLoggedIn()) {
     if (role === 'admin') {
       router.replace('/admin/users')
-    } else {
-      router.replace('/')
     }
   } else {
-    router.replace('/login')
+    const nextUrl = route.path
+    router.replace(`/login?next=${nextUrl}`)
   }
 })
 </script>

@@ -48,7 +48,7 @@
     </q-header>
     <div class="container">
       <div class="row text-center fit q-gutter-lg q-mx-auto">
-        <div class="col-12 col-md-5 q-pa-md bg-secondary">
+        <div class="col-12 col-md-6 q-mx-auto q-pa-md bg-secondary">
           <div class="bg-white card full-height q-pt-xs q-pb-md">
             <div class="login text-h6 text-primary text-uppercase">
               <div class="q-my-md">
@@ -144,15 +144,6 @@
             </template>
           </div>
         </div>
-        <div class="col-12 col-md-6 q-pa-md bg-secondary">
-          <div class="bg-white card full-height">
-            <div class="login text-h6 text-primary text-uppercase">
-              <div class="q-my-md">
-                GUIDE
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </q-page>
@@ -160,7 +151,7 @@
 <script setup lang="ts">
 import { reactive, ref, onMounted } from 'vue'
 import { useLogin, useAuth } from 'src/components/backend/auth'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { LocalStorage, Notify, QForm } from 'quasar'
 import { useViewerUser } from 'src/components/backend/user'
 
@@ -183,6 +174,8 @@ const MENU = [
 ]
 
 const router = useRouter()
+const route = useRoute()
+const nextUrl = route.query.next || '/'
 const menuToggle = ref(false)
 const passwordToggle = ref(true)
 const loading = ref(false)
@@ -218,7 +211,8 @@ async function onSubmit() {
     // check user role
 
     if (isLoggedIn()) {
-      router.replace('/')
+      if (nextUrl === '/') router.replace('/')
+      else router.replace(nextUrl as string)
     } else {
       Notify.create({
         message: 'Invalid username or password',
@@ -264,7 +258,7 @@ onMounted(() => {
 .container
   width: 1500px
   max-width: 96vw
-  height: 86dvh
+  height: 45dvh
 
 .login
   border-bottom: 2px solid rgba($primary, 0.2)
@@ -274,4 +268,8 @@ onMounted(() => {
 .q-form
   max-width: 30vw
 
+// Mobile
+@media screen and (max-width: $breakpoint-xs-max)
+  .q-form
+    max-width: 90vw
 </style>

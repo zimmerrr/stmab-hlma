@@ -30,15 +30,12 @@ onMounted(async () => {
       router.replace('/admin/users')
     } else if (user?.role === 'instructor' || user?.role === 'student') {
       router.replace('/courses')
-    } else {
-      router.replace('/login')
     }
+  } else {
+    router.replace('/login')
   }
 })
 
-onMounted(() => {
-
-})
 </script>
 
 <style scoped lang="sass">

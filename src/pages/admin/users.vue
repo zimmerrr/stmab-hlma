@@ -22,41 +22,56 @@
                 </q-inner-loading>
               </template>
               <template #top>
-                <div class="text-h6 q-pl-md">
-                  Users
-                </div>
-                <q-space />
-                <q-input
-                  v-model="searchQuery"
-                  color="accent"
-                  filled
-                  borderless
-                  dense
-                  hide-bottom-space
-                  label="Search"
-                  debounce="250"
-                  class="filter-input"
-                />
-
-                <div class="q-mx-md">
-                  <div>
-                    <q-btn
-                      :label="active ? 'Active' : 'Inactive'"
-                      class="q-px-md generic-button"
-                      flat
-                      @click="active ? active = false : active = true; fetchItems()"
-                    />
+                <div
+                  class="row"
+                >
+                  <div
+                    class="text-h6"
+                    :class="$q.screen.xs ? 'col-4' : 'q-pl-md'"
+                  >
+                    Users
                   </div>
-                </div>
+                  <q-space v-if="!$q.screen.xs" />
+                  <q-input
+                    v-model="searchQuery"
+                    color="accent"
+                    filled
+                    borderless
+                    dense
+                    hide-bottom-space
+                    label="Search"
+                    debounce="250"
+                    :class="$q.screen.xs ? 'col-8 q-mb-sm' : ''"
+                    class="filter-input"
+                  />
 
-                <div class="q-mx-md">
-                  <div>
-                    <q-btn
-                      color="green"
-                      label="Add User"
-                      class="q-px-md generic-button"
-                      @click="showDialog = true"
-                    />
+                  <div
+                    :class="$q.screen.xs ? 'col-6' : 'q-mx-md'"
+                  >
+                    <div>
+                      <q-btn
+                        :size="$q.screen.xs ? 'xs' : 'md'"
+                        :label="active ? 'Active' : 'Inactive'"
+                        class="q-px-md generic-button"
+                        flat
+                        @click="active ? active = false : active = true; fetchItems()"
+                      />
+                    </div>
+                  </div>
+
+                  <div
+                    :class="$q.screen.xs ? 'col-6 text-center' : 'q-mx-md'"
+                  >
+                    <div>
+                      <q-btn
+                        :size="$q.screen.xs ? 'xs' : 'md'"
+                        color="green"
+                        label="Add User"
+                        class="generic-button"
+                        :class="$q.screen.xs ? 'col-6' : 'q-px-md'"
+                        @click="showDialog = true"
+                      />
+                    </div>
                   </div>
                 </div>
               </template>
@@ -93,6 +108,7 @@
                 <q-td :props="props">
                   <div class="row q-gutter-md justify-center">
                     <q-btn
+                      :size="$q.screen.xs ? 'xs' : 'md'"
                       label="UPDATE"
                       color="orange-13"
                       @click="
@@ -108,11 +124,13 @@
                         form.password = props.row.password"
                     />
                     <q-btn
+                      :size="$q.screen.xs ? 'xs' : 'md'"
                       label="CHANGE PASSWORD"
                       color="orange-14"
                       @click="changePasswordDialog = true; form._id = props.row._id;"
                     />
                     <q-btn
+                      :size="$q.screen.xs ? 'xs' : 'md'"
                       :disable="deleteUserLoading"
                       label="DELETE"
                       color="red"
@@ -133,7 +151,7 @@
     v-model="showDialog"
     persistent
   >
-    <q-card style="width: 900px; max-width: 50vw;">
+    <q-card style="width: 900px; max-width: 90vw;">
       <q-form
         ref="formRef"
         class="text-center q-px-md q-mb-md q-mt-sm q-mx-auto"
@@ -234,30 +252,36 @@
             class="text-primary generic-input q-px-md"
           />
 
-          <div class="row q-mx-auto q-col-gutter-md q-mt-xs">
-            <div>
+          <div
+            class="row q-mx-auto q-mt-xs"
+            :class="$q.screen.xs ? 'q-col-gutter-sm' : 'q-col-gutter-md'"
+          >
+            <div :class="$q.screen.xs ? 'col-6' : ''">
               <q-btn
-                color="orange-13"
-                label="Cancel"
-                class="q-px-xl generic-button"
-                @click="showDialog = false; clear()"
-              />
-            </div>
-            <div>
-              <q-btn
+                :size="$q.screen.xs ? 'xs' : 'md'"
                 color="red"
                 label="Clear"
                 class="q-px-xl generic-button"
                 @click="clear"
               />
             </div>
-            <div>
+            <div :class="$q.screen.xs ? 'col-6' : ''">
               <q-btn
+                :size="$q.screen.xs ? 'xs' : 'md'"
                 color="green"
                 label="Add"
                 :loading="loading"
                 class="q-px-xl generic-button"
                 type="submit"
+              />
+            </div>
+            <div :class="$q.screen.xs ? 'col-6 q-mx-auto' : ''">
+              <q-btn
+                :size="$q.screen.xs ? 'xs' : 'md'"
+                color="orange-13"
+                label="Cancel"
+                class="q-px-xl generic-button"
+                @click="showDialog = false; clear()"
               />
             </div>
           </div>
@@ -271,7 +295,7 @@
     v-model="showUpdateDialog"
     persistent
   >
-    <q-card style="width: 900px; max-width: 50vw;">
+    <q-card style="width: 900px; max-width: 90vw;">
       <q-form
         ref="formRef"
         class="text-center q-px-md q-mb-md q-mt-sm q-mx-auto"
@@ -352,29 +376,32 @@
           />
 
           <div class="row q-mx-auto q-col-gutter-md q-mt-xs">
-            <div>
+            <div :class="$q.screen.xs ? 'col-6' : ''">
               <q-btn
-                color="orange-13"
-                label="Cancel"
-                class="q-px-xl generic-button"
-                @click="showUpdateDialog = false; clear()"
-              />
-            </div>
-            <div>
-              <q-btn
+                :size="$q.screen.xs ? 'xs' : 'md'"
                 color="red"
                 label="Clear"
                 class="q-px-xl generic-button"
                 @click="clear"
               />
             </div>
-            <div>
+            <div :class="$q.screen.xs ? 'col-6' : ''">
               <q-btn
+                :size="$q.screen.xs ? 'xs' : 'md'"
                 color="green"
                 label="Update"
                 :loading="loading"
                 class="q-px-xl generic-button"
                 type="submit"
+              />
+            </div>
+            <div :class="$q.screen.xs ? 'col-6 q-mx-auto' : ''">
+              <q-btn
+                :size="$q.screen.xs ? 'xs' : 'md'"
+                color="orange-13"
+                label="Cancel"
+                class="q-px-xl generic-button"
+                @click="showUpdateDialog = false; clear()"
               />
             </div>
           </div>
@@ -388,7 +415,7 @@
     v-model="changePasswordDialog"
     persistent
   >
-    <q-card style="width: 900px; max-width: 30vw;">
+    <q-card style="width: 900px; max-width: 90vw;">
       <q-form
         ref="passwordRef"
         class="text-center q-px-md q-mb-md q-mt-sm q-mx-auto"
@@ -424,6 +451,7 @@
           <div class="row q-mx-auto q-col-gutter-md q-mt-xs">
             <div class="col-6">
               <q-btn
+                :size="$q.screen.xs ? 'xs' : 'md'"
                 color="orange-13"
                 label="Cancel"
                 class="full-width generic-button"
@@ -432,6 +460,7 @@
             </div>
             <div class="col-6">
               <q-btn
+                :size="$q.screen.xs ? 'xs' : 'md'"
                 color="green"
                 label="Update"
                 :loading="loading"
@@ -720,4 +749,8 @@ const COLUMNS: {
 :deep(.q-table__container)
   min-height: 80vh !important
 
+// Mobile
+@media screen and (max-width: $breakpoint-xs-max)
+  .filter-input
+    width: 65% !important
 </style>

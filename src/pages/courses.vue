@@ -22,21 +22,27 @@
                 </q-inner-loading>
               </template>
               <template #top>
-                <div class="text-h6 q-pl-md">
-                  Courses
+                <div class="row">
+                  <div
+                    class="text-h6"
+                    :class="$q.screen.xs ? 'col-4 q-mr-md' : 'q-pl-md'"
+                  >
+                    Courses
+                  </div>
+                  <q-space v-if="!$q.screen.xs" />
+                  <q-input
+                    v-model="searchQuery"
+                    color="accent"
+                    filled
+                    borderless
+                    dense
+                    hide-bottom-space
+                    :class="$q.screen.xs ? 'col-7 q-mb-sm' : ''"
+                    label="Search"
+                    debounce="250"
+                    class="filter-input"
+                  />
                 </div>
-                <q-space />
-                <q-input
-                  v-model="searchQuery"
-                  color="accent"
-                  filled
-                  borderless
-                  dense
-                  hide-bottom-space
-                  label="Search"
-                  debounce="250"
-                  class="filter-input"
-                />
               </template>
 
               <template #header-cell-id="props">
@@ -74,6 +80,12 @@
                       color="green-8"
                       form.members="props.row.members"
                       @click="router.replace('/' + props.row._id)"
+                    />
+                    <q-btn
+                      label="COPY LINK"
+                      color="green-8"
+                      form.members="props.row.members"
+                      @click="copyLink(props.row._id)"
                     />
                   </div>
                 </q-td>
@@ -133,10 +145,13 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, watch } from 'vue'
 import { type Course, addCourse, updateCourse, viewerCourses } from 'src/components/backend/course'
-import { Notify, QForm } from 'quasar'
-import { useRouter } from 'vue-router'
+import { Notify, QForm, copyToClipboard } from 'quasar'
+import { useRouter, useRoute } from 'vue-router'
+import { useConfig } from 'src/components/backend/config'
 
 const router = useRouter()
+const route = useRoute()
+const config = useConfig()
 const showDialog = ref(false)
 const showUpdateDialog = ref(false)
 const showMembersDialog = ref(false)
@@ -200,6 +215,14 @@ async function onSubmit() {
   } finally {
     loading.value = false
   }
+}
+
+function copyLink(id: string) {
+  copyToClipboard(config.FRONTEND + '/join/' + id)
+  Notify.create({
+    message: 'Link copied to clipboard',
+    color: 'green',
+  })
 }
 
 async function fetchCourses() {
@@ -284,4 +307,8 @@ const COLUMNS: {
 :deep(.q-table__container)
   min-height: 80vh !important
 
+// Mobile
+@media screen and (max-width: $breakpoint-xs-max)
+  .filter-input
+    width: 60% !important
 </style>

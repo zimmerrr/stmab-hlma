@@ -11,10 +11,11 @@
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
     "build": "quasar build",
-    "postinstall": "quasar prepare" 
+    "postinstall": "quasar prepare"
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",
+    "file-saver": "^2.0.5",
     "html5-qrcode": "^2.3.8",
     "lodash": "^4.17.21",
     "qrcode.vue": "^3.6.0",
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "@quasar/app-vite": "^2.0.0-rc.1",
+    "@types/file-saver": "^2.0.7",
     "@types/lodash": "^4.17.13",
     "@types/node": "^20.5.9",
     "@typescript-eslint/eslint-plugin": "^7.16.0",

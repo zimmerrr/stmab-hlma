@@ -22,40 +22,50 @@
                 </q-inner-loading>
               </template>
               <template #top>
-                <div class="text-h6 q-pl-md">
-                  Courses
-                </div>
-                <q-space />
-                <q-input
-                  v-model="searchQuery"
-                  color="accent"
-                  filled
-                  borderless
-                  dense
-                  hide-bottom-space
-                  label="Search"
-                  debounce="250"
-                  class="filter-input"
-                />
-
-                <div class="q-mx-md">
-                  <div>
-                    <q-btn
-                      :label="active ? 'Active' : 'Inactive'"
-                      class="q-px-md generic-button"
-                      flat
-                      @click="active ? active = false : active = true; fetchCourses()"
-                    />
+                <div class="row">
+                  <div
+                    class="text-h6 "
+                    :class="$q.screen.xs ? 'col-4' : 'q-pl-md'"
+                  >
+                    Courses
                   </div>
-                </div>
-                <div class="q-mr-md">
-                  <div>
-                    <q-btn
-                      color="green"
-                      label="Add Course"
-                      class="q-px-md generic-button"
-                      @click="showDialog = true;"
-                    />
+                  <q-space v-if="!$q.screen.xs" />
+                  <q-input
+                    v-model="searchQuery"
+                    color="accent"
+                    filled
+                    borderless
+                    dense
+                    :class="$q.screen.xs ? 'col-8 q-mb-md' : ''"
+                    hide-bottom-space
+                    label="Search"
+                    debounce="250"
+                    class="filter-input"
+                  />
+
+                  <div
+                    :class="$q.screen.xs ? 'col-6' : 'q-mx-md'"
+                  >
+                    <div>
+                      <q-btn
+                        :label="active ? 'Active' : 'Inactive'"
+                        class="q-px-md generic-button"
+                        flat
+                        @click="active ? active = false : active = true; fetchCourses()"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    :class="$q.screen.xs ? 'col-6 text-center' : 'q-mx-md'"
+                  >
+                    <div>
+                      <q-btn
+                        color="green"
+                        label="Add Course"
+                        class="q-px-md generic-button"
+                        @click="showDialog = true;"
+                      />
+                    </div>
                   </div>
                 </div>
               </template>
@@ -134,7 +144,7 @@
     v-model="showDialog"
     persistent
   >
-    <q-card style="width: 900px; max-width: 50vw;">
+    <q-card style="width: 900px; max-width: 90vw;">
       <q-form
         ref="formRef"
         class="text-center q-px-md q-mb-md q-mt-sm q-mx-auto"
@@ -179,15 +189,7 @@
             class="text-primary generic-input q-px-md"
           />
           <div class="row q-mx-auto q-col-gutter-md q-mt-xs">
-            <div>
-              <q-btn
-                color="orange-13"
-                label="Cancel"
-                class="q-px-xl generic-button"
-                @click="showDialog = false; clear()"
-              />
-            </div>
-            <div>
+            <div :class="$q.screen.xs ? 'col-6' : ''">
               <q-btn
                 color="red"
                 label="Clear"
@@ -195,13 +197,21 @@
                 @click="clear"
               />
             </div>
-            <div>
+            <div :class="$q.screen.xs ? 'col-6' : ''">
               <q-btn
                 color="green"
                 label="Add"
                 :loading="loading"
                 class="q-px-xl generic-button"
                 type="submit"
+              />
+            </div>
+            <div :class="$q.screen.xs ? 'col-6 q-mx-auto' : ''">
+              <q-btn
+                color="orange-13"
+                label="Cancel"
+                class="q-px-xl generic-button"
+                @click="showDialog = false; clear()"
               />
             </div>
           </div>
@@ -215,7 +225,7 @@
     v-model="showUpdateDialog"
     persistent
   >
-    <q-card style="width: 900px; max-width: 50vw;">
+    <q-card style="width: 900px; max-width: 90vw;">
       <q-form
         ref="formRef"
         class="text-center q-px-md q-mb-md q-mt-sm q-mx-auto"
@@ -260,15 +270,7 @@
             class="text-primary generic-input q-px-md"
           />
           <div class="row q-mx-auto q-col-gutter-md q-mt-xs">
-            <div>
-              <q-btn
-                color="orange-13"
-                label="Cancel"
-                class="q-px-xl generic-button"
-                @click="showUpdateDialog = false; clear()"
-              />
-            </div>
-            <div>
+            <div :class="$q.screen.xs ? 'col-6' : ''">
               <q-btn
                 color="red"
                 label="Clear"
@@ -276,13 +278,21 @@
                 @click="clear"
               />
             </div>
-            <div>
+            <div :class="$q.screen.xs ? 'col-6' : ''">
               <q-btn
                 color="green"
                 label="Update"
                 :loading="loading"
                 class="q-px-xl generic-button"
                 type="submit"
+              />
+            </div>
+            <div :class="$q.screen.xs ? 'col-6 q-mx-auto' : ''">
+              <q-btn
+                color="orange-13"
+                label="Cancel"
+                class="q-px-xl generic-button"
+                @click="showUpdateDialog = false; clear()"
               />
             </div>
           </div>
@@ -296,7 +306,7 @@
     v-model="showMembersDialog"
     persistent
   >
-    <q-card style="width: 900px; max-width: 50vw;">
+    <q-card style="width: 900px; max-width: 90vw;">
       <q-form
         ref="formRef"
         class="text-center q-px-md q-mb-md q-mt-sm q-mx-auto"
@@ -537,4 +547,8 @@ const COLUMNS: {
 :deep(.q-table__container)
   min-height: 80vh !important
 
+// Mobile
+@media screen and (max-width: $breakpoint-xs-max)
+  .filter-input
+    width: 65% !important
 </style>

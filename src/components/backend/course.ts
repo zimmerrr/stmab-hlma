@@ -10,6 +10,7 @@ export interface Activity {
   name?: string
   description?: string
   active?: boolean
+  file?: File
 }
 export interface Member {
   _id?: string,
@@ -102,6 +103,30 @@ export async function updateCourse(course: Course) {
   }
 }
 
+export async function joinCourse(courseId: string, userId: string, name: string, group: string) {
+  try {
+    const token = LocalStorage.getItem('AUTH_TOKEN')
+    const response = await fetch(`${config.API_HOST}/courses/member`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        courseId,
+        userId,
+        name,
+        group,
+      }),
+    })
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+  } catch (error) {
+    console.error('Error occurred:', error)
+  }
+}
+
 export async function viewerCourses() {
   try {
     const token = LocalStorage.getItem('AUTH_TOKEN')
@@ -154,16 +179,21 @@ export async function viewActivities(courseId: string) {
 export async function addActivity(courseId: string, activity: Activity) {
   try {
     const token = LocalStorage.getItem('AUTH_TOKEN')
+    const formData = new FormData()
+
+    formData.append('courseId', courseId)
+    if (activity.name) formData.append('name', activity.name)
+    if (activity.description) formData.append('description', activity.description)
+    if (activity.active !== undefined) formData.append('active', String(activity.active))
+    if (activity.file) formData.append('file', activity.file)
+
     const response = await fetch(`${config.API_HOST}/courses/activity`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        courseId,
-        ...activity,
-      }),
+      body:
+        formData,
 
     })
     if (!response.ok) {

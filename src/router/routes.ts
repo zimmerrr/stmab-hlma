@@ -18,8 +18,13 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/courses/_course.vue'),
       },
       {
+        path: '/join/:course',
+        component: () => import('pages/join.vue'),
+      },
+      {
         path: 'login',
         component: () => import('pages/login.vue'),
+        meta: { login: true },
       },
       {
         path: 'logout',
@@ -39,10 +44,10 @@ const routes: RouteRecordRaw[] = [
         path: 'course',
         component: () => import('pages/admin/course.vue'),
       },
-      // {
-      //   path: 'logs',
-      //   component: () => import('pages/admin/logs.vue'),
-      // },
+      {
+        path: 'logs',
+        component: () => import('pages/admin/logs.vue'),
+      },
     ],
   },
 

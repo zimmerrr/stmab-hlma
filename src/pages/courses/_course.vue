@@ -11,6 +11,8 @@
               :columns="COLUMNS"
               :rows-per-page-options="[10, 15, 20, 25, 50]"
               row-key="id"
+              :wrap-cells="$q.screen.xs ? true : false"
+              :dense="$q.screen.xs ? true : false"
               :filter="searchQuery"
             >
               <template #loading>
@@ -27,18 +29,24 @@
                   @click="router.replace('/courses')"
                 >
                   <div>
-                    <q-icon name="arrow_back_ios_new" /> BACK
+                    <q-icon name="arrow_back_ios_new" />
+                    <span v-if="!$q.screen.xs">
+                      BACK
+                    </span>
                   </div>
                 </div>
 
-                <q-space />
+                <q-space v-if="!$q.screen.xs" />
 
-                <div class="text-h6 q-mr-md">
+                <div
+                  class="text-h6 q-mr-md"
+                  :class="$q.screen.xs? 'q-ml-md' : ''"
+                >
                   Activities
                 </div>
                 <div
                   v-if="user?.role === 'instructor'"
-                  class="q-mx-md"
+                  :class="$q.screen.xs? '' : 'q-mx-md'"
                 >
                   <div>
                     <q-btn
@@ -66,6 +74,21 @@
                 </q-td>
               </template>
 
+              <template #header-cell-file="props">
+                <q-th
+                  :props="props"
+                  class="hidden"
+                />
+              </template>
+              <template #body-cell-file="props">
+                <q-td
+                  :props="props"
+                  class="hidden"
+                >
+                  <span class="highlight-control-number">{{ props.row._id }}</span>
+                </q-td>
+              </template>
+
               <template #body-cell-members="props">
                 <q-td
                   :props="props"
@@ -77,16 +100,17 @@
                 <q-td :props="props">
                   <div class="row q-gutter-md justify-center">
                     <q-btn
-                      label="VIEW ACTIVITY"
+                      :label="$q.screen.xs ? 'VIEW' : 'VIEW ACTIVITY'"
                       color="green-8"
                       @click="
                         showActivityDialog = true;
                         form.name = props.row.name;
-                        form.description = props.row.description;"
+                        form.description = props.row.description;
+                        form.file = props.row.file;"
                     />
                     <q-btn
                       v-if="user?.role === 'instructor'"
-                      label="DELETE ACTIVITY"
+                      :label="$q.screen.xs ? 'DELETE' : 'DELETE ACTIVITY'"
                       color="red"
                       @click="deleteActivity(props.row._id)"
                     />
@@ -106,10 +130,10 @@
     persistent
   >
     <q-card
-      style="width: 900px; max-width: 50vw;"
+      style="width: 900px; max-width: 90vw;"
       class="q-pa-md text-uppercase"
     >
-      <diV class="absolute-top-right q-mt-sm">
+      <div class="absolute-top-right q-mt-sm">
         <q-btn
           flat
           left
@@ -118,26 +142,52 @@
           style="z-index: 1;"
           @click="showActivityDialog = false; clear()"
         />
-      </diV>
+      </div>
+
       <q-card-section class="text-h6 q-pa-none q-mb-md">
-        <div>
-          {{ form.name }}
-        </div>
+        <div>{{ form.name }}</div>
       </q-card-section>
-      <q-card-section class="q-pa-none">
+
+      <q-card-section class="q-pa-none q-mb-md">
+        <div>{{ form.description }}</div>
+      </q-card-section>
+
+      <q-card-section
+        v-if="form.file"
+        class="q-pa-none text-center q-mb-md"
+      >
+        <q-img
+          v-if="isImage(form.file)"
+          :src="config.API_HOST + '/' + form.file"
+          style="width: 300px; max-height: 400px;"
+        />
+      </q-card-section>
+
+      <q-card-section
+        v-if="form.file"
+        class="q-pa-none text-center q-mb-md"
+      >
+        <div class="q-mb-md">
+          {{ getFileName(config.API_HOST + '/' + form.file.substring(8)) }}
+        </div>
+
         <div>
-          {{ form.description }}
+          <q-btn
+            label="Download File"
+            icon="download"
+            color="green"
+            @click="downloadFile()"
+          />
         </div>
       </q-card-section>
     </q-card>
   </q-dialog>
-
   <!-- ADD DIALOG -->
   <q-dialog
     v-model="showDialog"
     persistent
   >
-    <q-card style="width: 900px; max-width: 50vw;">
+    <q-card style="width: 900px; max-width: 90vw;">
       <q-form
         ref="formRef"
         class="text-center q-px-md q-mb-md q-mt-sm q-mx-auto"
@@ -170,16 +220,32 @@
             :disable="loading"
             class="text-primary generic-input q-px-md"
           />
-          <div class="row q-mx-auto q-col-gutter-md q-mt-xs">
-            <div>
-              <q-btn
-                color="orange-13"
-                label="Cancel"
-                class="q-px-xl generic-button"
-                @click="showDialog = false; clear()"
+
+          <q-file
+            v-model="file"
+            filled
+            bottom-slots
+            label="Upload File"
+            counter
+            color="black"
+            max-total-size="24000000"
+          >
+            <template #prepend>
+              <q-icon
+                name="cloud_upload"
+                @click.stop.prevent
               />
-            </div>
-            <div>
+            </template>
+            <template #append>
+              <q-icon
+                name="close"
+                class="cursor-pointer"
+                @click.stop.prevent="file = null"
+              />
+            </template>
+          </q-file>
+          <div class="row q-mx-auto q-col-gutter-md q-mt-xs">
+            <div :class="$q.screen.xs ? 'col-6' : ''">
               <q-btn
                 color="red"
                 label="Clear"
@@ -187,13 +253,21 @@
                 @click="clear"
               />
             </div>
-            <div>
+            <div :class="$q.screen.xs ? 'col-6' : ''">
               <q-btn
                 color="green"
                 label="Add"
                 :loading="loading"
                 class="q-px-xl generic-button"
                 type="submit"
+              />
+            </div>
+            <div :class="$q.screen.xs ? 'col-6 q-mx-auto' : ''">
+              <q-btn
+                color="orange-13"
+                label="Cancel"
+                class="q-px-xl generic-button"
+                @click="showDialog = false; clear()"
               />
             </div>
           </div>
@@ -207,10 +281,13 @@ import { useRoute, useRouter } from 'vue-router'
 import { ref, onMounted, reactive } from 'vue'
 import { useViewerUser, type User } from 'src/components/backend/user'
 import { type Activity, viewActivities, addActivity, updateActivity } from 'src/components/backend/course'
-import { Dialog, QForm } from 'quasar'
+import { Dialog, QForm, Notify } from 'quasar'
+import { useConfig } from 'src/components/backend/config'
+import { saveAs } from 'file-saver'
 
 const route = useRoute()
 const router = useRouter()
+const config = useConfig()
 const courseId = ref(route.params.course as string || '')
 const user = ref<User>(null as any)
 const activities = ref<Activity[]>([])
@@ -219,7 +296,7 @@ const deleteCourseLoading = ref(false)
 const showDialog = ref(false)
 const showActivityDialog = ref(false)
 const formRef = ref<QForm>(null as any)
-
+const file = ref(null as any)
 const { viewUser } = useViewerUser()
 const searchQuery = ref('')
 
@@ -227,11 +304,13 @@ const form = reactive({
   _id: '',
   name: '',
   description: '',
+  file: '',
 })
 
 function clear() {
   form.name = ''
   form.description = ''
+  file.value = ''
 }
 
 onMounted(async () => {
@@ -271,10 +350,12 @@ async function deleteActivity(id: string) {
 async function onSubmit() {
   try {
     loading.value = true
+
     if (showDialog.value) {
       await addActivity(courseId.value as any, {
         name: form.name,
         description: form.description,
+        file: file.value,
       } as Activity)
     }
     fetchActivities()
@@ -287,12 +368,41 @@ async function onSubmit() {
   }
 }
 
+function isImage(filePath: string): boolean {
+  const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp']
+  const extension = filePath.split('.').pop()?.toLowerCase()
+  return extension ? imageExtensions.includes(extension) : false
+}
+
+function getFileName(filePath: string) {
+  if (!filePath) return 'downloaded-file'
+  const parts = filePath.split('/')
+  return parts.pop() || 'downloaded-file'
+}
+
+async function downloadFile() {
+  try {
+    loading.value = true
+
+    const fileUrl = ref(config.API_HOST + '/' + form.file)
+    const fileName = getFileName(fileUrl.value)
+    saveAs(fileUrl.value, fileName)
+  } catch (err) {
+    console.error('Error downloading file:', err)
+    Notify.create({
+      type: 'negative',
+      message: 'Failed to download the file.',
+    })
+  } finally {
+    loading.value = false
+  }
+}
+
 async function fetchActivities() {
   try {
     loading.value = true
     const response = await viewActivities(courseId.value)
     activities.value = response.activities
-    console.log(activities.value, 'test')
   } catch (error) {
     console.error('Error fetching Courses:', error)
   } finally {
@@ -313,6 +423,13 @@ const COLUMNS: {
     name: 'id',
     label: 'ID',
     field: (r: any) => r._id,
+    required: true,
+    align: 'center',
+  },
+  {
+    name: 'file',
+    label: 'FILE',
+    field: (r: any) => r.file,
     required: true,
     align: 'center',
   },
@@ -346,4 +463,10 @@ const COLUMNS: {
 :deep(.q-table__container)
   min-height: 80vh !important
 
+// Mobile
+@media screen and (max-width: $breakpoint-xs-max)
+  :deep(.q-table--no-wrap th)
+    white-space: normal !important
+  :deep(.q-table__container)
+    white-space: normal !important
 </style>
