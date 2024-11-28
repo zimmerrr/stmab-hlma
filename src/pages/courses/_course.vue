@@ -158,7 +158,7 @@
       >
         <q-img
           v-if="isImage(form.file)"
-          :src="config.API_HOST + '/' + form.file"
+          :src="form.file"
           style="width: 300px; max-height: 400px;"
         />
       </q-card-section>
@@ -168,7 +168,7 @@
         class="q-pa-none text-center q-mb-md"
       >
         <div class="q-mb-md">
-          {{ getFileName(config.API_HOST + '/' + form.file.substring(8)) }}
+          {{ getFileName(form.file.substring(8)) }}
         </div>
 
         <div>
@@ -384,7 +384,7 @@ async function downloadFile() {
   try {
     loading.value = true
 
-    const fileUrl = ref(config.API_HOST + '/' + form.file)
+    const fileUrl = ref(form.file)
     const fileName = getFileName(fileUrl.value)
     saveAs(fileUrl.value, fileName)
   } catch (err) {
