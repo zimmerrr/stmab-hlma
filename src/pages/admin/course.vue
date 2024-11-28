@@ -127,7 +127,7 @@
                       :disable="deleteCourseLoading"
                       :label="active ? 'DELETE' : 'RESTORE'"
                       :color="active ? 'red' : 'green'"
-                      @click="deleteCourse(props.row._id, props.row.controlNumber)"
+                      @click="deleteCourse(props.row._id, props.row.username)"
                     />
                   </div>
                 </q-td>
