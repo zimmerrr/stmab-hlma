@@ -54,7 +54,7 @@
                         :label="active ? 'Active' : 'Inactive'"
                         class="q-px-md generic-button"
                         flat
-                        @click="active ? active = false : active = true; fetchItems()"
+                        @click="active ? active = false : active = true; fetchUsers()"
                       />
                     </div>
                   </div>
@@ -132,8 +132,8 @@
                     <q-btn
                       :size="$q.screen.xs ? 'xs' : 'md'"
                       :disable="deleteUserLoading"
-                      label="DELETE"
-                      color="red"
+                      :label="active ? 'DELETE' : 'RESTORE'"
+                      :color="active ? 'red' : 'green'"
                       @click="deleteUser(props.row._id, props.row.username)"
                     />
                   </div>
@@ -487,7 +487,7 @@ const loading = ref(false)
 const deleteUserLoading = ref(false)
 const formRef = ref<QForm>(null as any)
 const passwordRef = ref<QForm>(null as any)
-const currItem = ref(null as any)
+const currUser = ref(null as any)
 
 const user = ref<User[]>([])
 const searchQuery = ref('')
@@ -608,7 +608,7 @@ async function onSubmit() {
       }
     }
 
-    fetchItems()
+    fetchUsers()
   } catch (error) {
     console.log(error)
   } finally {
@@ -616,13 +616,13 @@ async function onSubmit() {
   }
 }
 
-async function fetchItems() {
+async function fetchUsers() {
   try {
     loading.value = true
     const _user = await viewUsers(active.value, searchQuery.value.trim(), filter.value.trim())
     user.value = _user
   } catch (error) {
-    console.error('Error fetching items:', error)
+    console.error('Error fetching users:', error)
   } finally {
     loading.value = false
   }
@@ -631,29 +631,46 @@ async function fetchItems() {
 async function deleteUser(id: string, username: string) {
   try {
     deleteUserLoading.value = true
-    Dialog.create({
-      title: 'Confirm Action',
-      message: `Are you sure you want to delete <b>${username}</b>? This action cannot be undone.`,
-      html: true,
-      color: 'black',
-      ok: { label: 'Delete Item', color: 'negative' },
-      cancel: true,
-    }).onOk(async () => {
-      await updateUser({
-        _id: id,
-        active: false,
+    if (active.value) {
+      Dialog.create({
+        title: 'Confirm Action',
+        message: `Are you sure you want to delete <b>${username}</b>? This action cannot be undone.`,
+        html: true,
+        color: 'black',
+        ok: { label: 'Delete User', color: 'negative' },
+        cancel: true,
+      }).onOk(async () => {
+        await updateUser({
+          _id: id,
+          active: false,
+        })
+        fetchUsers()
       })
-      fetchItems()
-    })
+    } else {
+      Dialog.create({
+        title: 'Confirm Action',
+        message: `Are you sure you want to restore <b>${username}</b>? This action cannot be undone.`,
+        html: true,
+        color: 'black',
+        ok: { label: 'Restore User', color: 'positive' },
+        cancel: true,
+      }).onOk(async () => {
+        await updateUser({
+          _id: id,
+          active: true,
+        })
+        fetchUsers()
+      })
+    }
   } catch (error) {
-    console.error('Error deleting item:', error)
+    console.error('Error deleting user:', error)
   } finally {
     deleteUserLoading.value = false
   }
 }
 
-onMounted(fetchItems)
-watch(searchQuery, fetchItems)
+onMounted(fetchUsers)
+watch(searchQuery, fetchUsers)
 
 const COLUMNS: {
   name: string;
