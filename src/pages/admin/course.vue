@@ -84,12 +84,11 @@
                   <span class="highlight-control-number">{{ props.row._id }}</span>
                 </q-td>
               </template>
-              <!-- <template #header-cell-members="props">
+              <template #header-cell-members="props">
                 <q-th
                   :props="props"
-                  class="hidden"
                 />
-              </template> -->
+              </template>
               <template #body-cell-members="props">
                 <q-td
                   :props="props"
@@ -111,6 +110,12 @@
                         form.name = props.row.name;
                         form.description = props.row.description
                         form.members = props.row.members;"
+                    />
+                    <q-btn
+                      label="COPY LINK"
+                      color="green-8"
+                      form.members="props.row.members"
+                      @click="copyLink(props.row._id)"
                     />
                     <q-btn
                       v-if="active"
@@ -349,8 +354,10 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, watch } from 'vue'
 import { type Course, type Member, viewCourses, addCourse, updateCourse } from 'src/components/backend/course'
-import { Dialog, Notify, QForm } from 'quasar'
+import { Dialog, Notify, QForm, copyToClipboard } from 'quasar'
+import { useConfig } from 'src/components/backend/config'
 
+const config = useConfig()
 const showDialog = ref(false)
 const showUpdateDialog = ref(false)
 const showMembersDialog = ref(false)
@@ -475,6 +482,13 @@ async function deleteCourse(id: string, controlNumber: string) {
   }
 }
 
+function copyLink(id: string) {
+  copyToClipboard(config.FRONTEND + '/join/' + id)
+  Notify.create({
+    message: 'Link copied to clipboard',
+    color: 'green',
+  })
+}
 onMounted(fetchCourses)
 watch(searchQuery, fetchCourses)
 

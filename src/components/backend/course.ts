@@ -162,6 +162,7 @@ export async function viewActivities(courseId: string) {
       },
       body: JSON.stringify({
         courseId,
+        active: true,
       }),
     })
     if (!response.ok) {
