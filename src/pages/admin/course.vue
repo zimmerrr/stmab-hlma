@@ -396,6 +396,7 @@ async function onSubmit() {
         name: form.name,
         description: form.description,
       })
+      showDialog.value = false
     } else if (showUpdateDialog.value) {
       await updateCourse({
         username: form.username,
