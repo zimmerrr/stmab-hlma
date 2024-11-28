@@ -22,7 +22,7 @@
                 </q-inner-loading>
               </template>
               <template #top>
-                <div class="row">
+                <div class="row full-width">
                   <div
                     class="text-h6"
                     :class="$q.screen.xs ? 'col-4 q-mr-md' : 'q-pl-md'"
@@ -37,7 +37,7 @@
                     borderless
                     dense
                     hide-bottom-space
-                    :class="$q.screen.xs ? 'col-7 q-mb-sm' : ''"
+                    :class="$q.screen.xs ? 'col-8 q-mb-sm' : ''"
                     label="Search"
                     debounce="250"
                     class="filter-input"
@@ -296,7 +296,6 @@ const COLUMNS: {
   width: 94vw
 
 .filter-input
-  width: 25% !important
   :deep(.q-field__control)
     border-radius: 0px !important
   :deep(.q-field__native)
