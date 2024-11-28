@@ -13,7 +13,9 @@
           />
 
           <q-toolbar-title class="non-selectable">
-            HLMA: Hybrid Learning Management Application
+            <span>
+              St. Thomas More Academy
+            </span>
           </q-toolbar-title>
         </q-toolbar>
 

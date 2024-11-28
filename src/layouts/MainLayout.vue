@@ -6,10 +6,7 @@
         <q-toolbar>
           <q-toolbar-title class="non-selectable">
             <span>
-              HLMA
-            </span>
-            <span v-if="!$q.screen.xs">
-              : Hybrid Learning Management Application
+              St. Thomas More Academy
             </span>
           </q-toolbar-title>
 
