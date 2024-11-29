@@ -60,6 +60,20 @@
                   </div>
 
                   <div
+                    :class="$q.screen.xs ? 'col-6' : 'q-mx-md'"
+                  >
+                    <div>
+                      <q-btn
+                        :size="$q.screen.xs ? 'xs' : 'md'"
+                        :label="filter === 'instructor' ? 'Instructors' : 'Students'"
+                        class="q-px-md generic-button"
+                        flat
+                        @click="filter === 'instructor' ? filter = 'student' : filter = 'instructor'; fetchUsers()"
+                      />
+                    </div>
+                  </div>
+
+                  <div
                     :class="$q.screen.xs ? 'col-6 text-center' : 'q-mx-md'"
                   >
                     <div>
@@ -491,7 +505,7 @@ const currUser = ref(null as any)
 
 const user = ref<User[]>([])
 const searchQuery = ref('')
-const filter = ref('')
+const filter = ref('instructor')
 const active = ref(true)
 const form = reactive({
   _id: '',
