@@ -251,7 +251,7 @@
             hide-bottom-space
             :rules="[(val: any) => !!val || 'This field is required']"
             :disable="loading"
-            :options="['instructor', 'student']"
+            :options="['Instructor', 'Student']"
             class="text-primary generic-input q-px-md"
           />
           <q-input
