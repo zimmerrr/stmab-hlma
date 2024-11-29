@@ -491,7 +491,7 @@ const currUser = ref(null as any)
 
 const user = ref<User[]>([])
 const searchQuery = ref('')
-const filter = ref('instructor')
+const filter = ref('')
 const active = ref(true)
 const form = reactive({
   _id: '',
