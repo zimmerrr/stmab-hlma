@@ -1,6 +1,6 @@
-# Inventory System (inventory-system)
+# St Thomas More Academy (stm-lms)
 
-Inventory System
+St Thomas More Academy
 
 ## Install the dependencies
 ```bash

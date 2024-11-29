@@ -1,8 +1,8 @@
 {
-  "name": "inventory-system",
+  "name": "stm-lms",
   "version": "0.0.1",
-  "description": "Inventory System",
-  "productName": "Inventory System",
+  "description": "St Thomas More Academy",
+  "productName": "St Thomas More Academy",
   "author": "Christian Andrei Torrijos <christianandreitorrijos@gmail.com>",
   "type": "module",
   "private": true,
