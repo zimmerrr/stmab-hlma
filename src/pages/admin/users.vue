@@ -74,7 +74,7 @@
                   </div>
 
                   <div
-                    :class="$q.screen.xs ? 'col-6 text-center' : 'q-mx-md'"
+                    :class="$q.screen.xs ? 'col-6 text-center q-mx-auto' : 'q-mx-md'"
                   >
                     <div>
                       <q-btn
